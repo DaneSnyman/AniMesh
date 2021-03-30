@@ -4,6 +4,8 @@ import { getDistance, Randomizer, getTheta } from "./Utils";
 export class Swarm {
   nPoints: number;
   dots: boolean = false;
+  PointColor = "#6d6991"; // 76d1b6
+  JoinColor = "#000"; // d17676 || 2b2f2f
   private Points: Point[] = [];
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
@@ -22,22 +24,17 @@ export class Swarm {
     this.ctx.beginPath();
     this.ctx.moveTo(x1, y1);
     this.ctx.lineTo(x2, y2);
-    this.ctx.strokeStyle = "#8377D1";
+    this.ctx.strokeStyle = this.JoinColor;
     this.ctx.stroke();
   }
 
-  // TODO: animate line draw
   private drawLine(x1: number, y1: number, x2: number, y2: number): void {
     if (this.dots) {
       const distance = getDistance(x1, y1, x2, y2);
       // const theta = getTheta(x1, y1, x2, y2) + Math.PI; // * Draw in opposite direction
       const theta = getTheta(x1, y1, x2, y2);
-      // this.ctx.moveTo(x1, y1);
       for (let i = 0; i < distance; i++) {
         if (i % 30 === 0) {
-          // this.ctx.lineTo(x1 + i * Math.cos(theta), y1 + i * Math.sin(theta));
-          // this.ctx.strokeStyle = "#8377D1";
-          // this.ctx.stroke();
           this.ctx.beginPath();
           this.ctx.arc(
             x1 + i * Math.cos(theta),
@@ -46,7 +43,7 @@ export class Swarm {
             0,
             Math.PI * 2
           );
-          this.ctx.fillStyle = "#8377D1";
+          this.ctx.fillStyle = this.JoinColor;
           this.ctx.fill();
         }
       }
@@ -81,11 +78,10 @@ export class Swarm {
     this.Points.forEach((point) => {
       this.Points.forEach((point2) => {
         if (getDistance(point.x, point.y, point2.x, point2.y) < 150) {
-          // this.draw(point.x, point.y, point2.x, point2.y);
           this.drawLine(point.x, point.y, point2.x, point2.y);
         }
       });
-      point.update();
+      point.update(this.PointColor);
     });
   }
 }
